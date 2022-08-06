@@ -15,8 +15,8 @@ run_qemu_system_x86:
 open: dis
 dis: disassemble_bin
 disassemble_bin:
-	ndisasm boot.bin
+	ndisasm boot.bin > disassemble_bin.txt
 
 #clean 
 clean:
-	rm boot.bin
+	- rm boot.bin

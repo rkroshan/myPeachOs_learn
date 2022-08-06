@@ -1,9 +1,27 @@
-; Program to print a string of character on screen from bootloader
+; Program to print a string of character on real hardware from bootloader
 
-ORG 0x7c00 ; changing origin address to 0x7c00
+ORG 0 ; changing origin address to 0
 BITS 16 ; 16 bit addressing
 
+;considering Bios parameter block information structure needs to be here for BIOS to put some information
+_start: ; https://wiki.osdev.org/FAT
+    jmp short start
+    nop
+
+times 33 db 0 ; size of BIOS Param block except the jmp short instruction, this will be use by some Bios to fill some information 
+
 start:
+    jmp 0x7c0:.define_segments_addr ; jump to 0x7c0+ addr(define_segments_addr) , since code segment starts at 0x7c0
+.define_segments_addr: ; it is necessary to diable interrupts when changing segment addrs
+    cli ; disable/clear interrupts
+    mov ax,0x7c0 ; addr from where bootloader loads
+    mov ds,ax ; set data segment addr to 0x7c00
+    mov es,ax ; set extra segment addr to 0x7c00
+    mov ax,0x00 
+    mov ss,ax ; set stack segment addr to 0
+    mov sp,0x7c00 ; set stack pointer addr to 0x7c00
+    sti ; enable interrupts
+.program:
     mov si, message ; moving message address to source index reg
     call print_message ; call print_message subroutine
     jmp $ ; infinite jmp to current address, so it stops here
