@@ -1,4 +1,4 @@
-; Program to print a string of character on real hardware from bootloader
+; Program to understand nvic in real_mode x86 work on qemu and real hdwr
 
 ORG 0 ; changing origin address to 0
 BITS 16 ; 16 bit addressing
@@ -10,6 +10,24 @@ _start: ; https://wiki.osdev.org/FAT
 
 times 33 db 0 ; size of BIOS Param block except the jmp short instruction, this will be use by some Bios to fill some information 
 
+;Real Mode interrupt handlers subroutines
+intr_handler_0:
+    ;we will just print 0 char here using int 0x10
+    mov ah, 0eh
+    mov al, '0'
+    mov bx, 0
+    int 0x10
+    iret
+
+intr_handler_1:
+    ;we will just print 1 char here using int 0x10
+    mov ah, 0eh
+    mov al, '1'
+    mov bx, 0
+    int 0x10
+    iret
+
+;actual start of code
 start:
     jmp 0x7c0:.define_segments_addr ; jump to 0x7c0+ addr(define_segments_addr) , since code segment starts at 0x7c0
 .define_segments_addr: ; it is necessary to diable interrupts when changing segment addrs
@@ -21,6 +39,15 @@ start:
     mov ss,ax ; set stack segment addr to 0
     mov sp,0x7c00 ; set stack pointer addr to 0x7c00
     sti ; enable interrupts
+.define_interrupt_handlers:
+    mov word[ss:0x00],intr_handler_0 ; placing intr_handler_0 addr at offset location, since ss value is 0x0, if not specified it will use ds reg value
+    mov word[ss:0x02],0x7c0 ; placing code segment addr at segment location
+
+    mov word[ss:0x04],intr_handler_1 ; placing intr_handler_0 addr at offset location
+    mov word[ss:0x06],0x7c0 ; placing code segment addr at segment location
+
+    int 0x00 ; calling intr 0
+    int 0x01 ; calling intr 1
 .program:
     mov si, message ; moving message address to source index reg
     call print_message ; call print_message subroutine
