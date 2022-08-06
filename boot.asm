@@ -1,4 +1,4 @@
-; Program to understand nvic in real_mode x86 work on qemu and real hdwr
+; Program to print message from disk access via bios intr chs algorithm on qemu and real hdwr
 
 ORG 0 ; changing origin address to 0
 BITS 16 ; 16 bit addressing
@@ -10,22 +10,17 @@ _start: ; https://wiki.osdev.org/FAT
 
 times 33 db 0 ; size of BIOS Param block except the jmp short instruction, this will be use by some Bios to fill some information 
 
-;Real Mode interrupt handlers subroutines
-intr_handler_0:
-    ;we will just print 0 char here using int 0x10
-    mov ah, 0eh
-    mov al, '0'
-    mov bx, 0
-    int 0x10
-    iret
+func_disk_read_msg: ; chs methos to read disk
+    mov ah, 0x02 ; 'Raplh Brown interrupts from Bios DISK - READ SECTOR(S) INTO MEMORY'
+    mov al, 0x01 ; number of sectors to read = 1
+    mov ch, 0x00 ; low eight bit of cylinder number
+    mov cl, 0x02 ; sector numer to read 1-63 = 2
+    mov dh, 0x00 ; head number = 0
+    ; dl = drive number is already set by bios in the structure reserved
+    mov bx,buffer ; buffer address where data from disk will reside
 
-intr_handler_1:
-    ;we will just print 1 char here using int 0x10
-    mov ah, 0eh
-    mov al, '1'
-    mov bx, 0
-    int 0x10
-    iret
+    int 0x13 ; invoke the interrupt
+    ret 
 
 ;actual start of code
 start:
@@ -39,19 +34,21 @@ start:
     mov ss,ax ; set stack segment addr to 0
     mov sp,0x7c00 ; set stack pointer addr to 0x7c00
     sti ; enable interrupts
-.define_interrupt_handlers:
-    mov word[ss:0x00],intr_handler_0 ; placing intr_handler_0 addr at offset location, since ss value is 0x0, if not specified it will use ds reg value
-    mov word[ss:0x02],0x7c0 ; placing code segment addr at segment location
-
-    mov word[ss:0x04],intr_handler_1 ; placing intr_handler_0 addr at offset location
-    mov word[ss:0x06],0x7c0 ; placing code segment addr at segment location
-
-    int 0x00 ; calling intr 0
-    int 0x01 ; calling intr 1
+    
 .program:
-    mov si, message ; moving message address to source index reg
+    call func_disk_read_msg
+    jc .print_error_message ; carry will be set if failed to read from disk
+
+.print_buffer_message:
+    mov si, buffer ; moving buffer address to source index reg
     call print_message ; call print_message subroutine
     jmp $ ; infinite jmp to current address, so it stops here
+
+.print_error_message:
+    mov si, error_message ; set si to error message addr
+    call print_message ; subroutine to print string
+    jmp $ ; infinite jump
+
 
 print_message:
     mov bx, 0 
@@ -69,6 +66,7 @@ print_char:
     int 0x10 ; interrupt to print output on screen
     ret
 
-message: db 'Hello, Roshan!',0 ; null termination by 0
+error_message: db 'failed to load message from disk',0 ; null termination by 0
 times 510-($ - $$) db 0 ; need to make bootloader of 512 bytes so filling remaining bytes to 0
 dw 0xAA55 ; 0x55AA is the boot signature which bios looks for in a boot loader before loading it dw flips the bytes and needed in little endian
+buffer: ; empty label just to get a blank address where disk will be stored
