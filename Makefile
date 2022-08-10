@@ -1,44 +1,39 @@
+#Absoulte Paths
+export SRC_DIRECTOTY=${PWD}/src
+export BIN_DIRECTORY=${PWD}/bin
+export BUILD_DIRECTORY=${PWD}/build
 
-SRC_DIRECTOTY=${PWD}/src
-BIN_DIRECTORY=${PWD}/bin
-BUILD_DIRECTORY=${PWD}/build
+#Directories to Build
+DIRECTORIES = $(SRC_DIRECTOTY)/boot \
+				$(SRC_DIRECTOTY)
 
-FILES = $(BUILD_DIRECTORY)/kernel.asm.o 
+#MACROS
+OS_BIN = os.bin 
 
-all: clean build_bootloader $(BIN_DIRECTORY)/kernel.bin disassemble_bin
-	dd if=$(BIN_DIRECTORY)/boot.bin >> $(BIN_DIRECTORY)/os.bin
-	dd if=$(BIN_DIRECTORY)/kernel.bin >> $(BIN_DIRECTORY)/os.bin
-	dd if=/dev/zero bs=512 count=100 >> $(BIN_DIRECTORY)/os.bin	
+.PHONY: clean all $(DIRECTORIES) run make_os
 
-#build kernel.asm.o
-$(BUILD_DIRECTORY)/kernel.asm.o: $(SRC_DIRECTOTY)/kernel.asm
-	nasm -f elf -g $^ -o $@
+all: $(DIRECTORIES) make_os
+all_r: $(DIRECTORIES) clean_os
 
-#building kernel.bin
-$(BIN_DIRECTORY)/kernel.bin: $(FILES)
-	i686-elf-ld -g -relocatable $(FILES) -o $(BUILD_DIRECTORY)/kernelfull.o
-	i686-elf-gcc -T $(SRC_DIRECTOTY)/linker.ld -o $@ -ffreestanding -nostdlib $(BUILD_DIRECTORY)/kernelfull.o
+$(DIRECTORIES):
+	$(MAKE) -C $@ $(MAKE_TARGET_CMD)
 
-#build the bootloader
-build_bootloader:
-	nasm -f bin $(SRC_DIRECTOTY)/boot/boot.asm -o $(BIN_DIRECTORY)/boot.bin
+make_os: clean_os
+	dd if=$(BIN_DIRECTORY)/boot.bin >> $(BIN_DIRECTORY)/$(OS_BIN)
+	dd if=$(BIN_DIRECTORY)/kernel.bin >> $(BIN_DIRECTORY)/$(OS_BIN)
+	dd if=/dev/zero bs=512 count=100 >> $(BIN_DIRECTORY)/$(OS_BIN)
+
+clean_os:
+	rm -rf $(BIN_DIRECTORY)/$(OS_BIN)
 
 #run the emulator
 run: run_qemu_system_x86
 
 run_qemu_system_x86:
-	qemu-system-x86_64 -hda $(BIN_DIRECTORY)/os.bin
+	qemu-system-x86_64 -hda $(BIN_DIRECTORY)/$(OS_BIN)
 
 #disassemble the bootloader binary
 open: dis
 dis: disassemble_bin
 disassemble_bin:
-	ndisasm $(BIN_DIRECTORY)/boot.bin > $(BIN_DIRECTORY)/disassemble_bootloader.txt
 	# ndisasm $(BIN_DIRECTORY)/os.bin > $(BIN_DIRECTORY)/disassemble_os.txt
-
-#clean 
-clean:
-	rm -rf $(BIN_DIRECTORY)/*.bin
-	rm -rf $(BIN_DIRECTORY)/*.txt
-	rm -rf $(FILES)
-	rm -rf $(BUILD_DIRECTORY)/kernelfull.o
