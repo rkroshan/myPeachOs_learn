@@ -1,10 +1,13 @@
 [BITS 32]
 
-; section .asm ; seperating kernel asm section, commented as were not able to get debugging symbol _start
+section .kernel.asm ; seperating kernel asm section, commented as were not able to get debugging symbol _start
 
 global _start
 CODE_SEG equ 0x08
 DATA_SEG equ 0x10
+
+;kernel main function defined in C
+extern kernel_main
 
 _start: ; enter into 32 bit protected mode code segment
     mov ax, DATA_SEG
@@ -20,7 +23,9 @@ _start: ; enter into 32 bit protected mode code segment
     in al, 0x92
     or al, 2
     out 0x92, al
-
+    
+.call_kernel_main:
+    call kernel_main
     jmp $
 
 times 512-($ - $$) db 0 ; it will help to make kernel size upto 512 bytes and prevemt any aligment issues in final binary for other executables since 512%16=0

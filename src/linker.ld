@@ -3,9 +3,9 @@ OUTPUT_FORMAT(binary)
 SECTIONS
 {
     . = 1M;
-    .asm : ALIGN(4096)
+    .kernel.asm : ALIGN(4096)
     {
-        *(.asm)
+        *(.kernel.asm)
     }
     .text : ALIGN(4096)
     {
@@ -26,5 +26,9 @@ SECTIONS
     {
         *(COMMON)
         *(.bss)
+    }
+    .asm : ALIGN(4096)
+    {
+        *(.asm)
     }
 }
