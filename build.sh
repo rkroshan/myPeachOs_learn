@@ -7,7 +7,7 @@ export PATH="$PREFIX/bin:$PATH"
 
 #Run our Make commands
 if [ -z $1 ]; then
-    make all
+    make all -j1
 else
     export MAKE_TARGET_CMD=$1
     make all_r

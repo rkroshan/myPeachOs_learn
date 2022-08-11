@@ -106,6 +106,8 @@ ata_lba_read:
     out dx, al
     
     ; Read all sectors into memory
+.next_sector:
+    push ecx
     ; waiting for sector data to read
 .try_again:
     mov edx, 0x1f7
@@ -113,15 +115,13 @@ ata_lba_read:
     test al, 8 ; check if it is equal to 8
     jz .try_again ; if equals then data is not ready to read, try again
 .reading_sectors:
-    ; data from 1 sector is ready to read
-    mov eax, 256 ; going to read 256 words = 512 bits
-    xor bx,bx ; clearing bx reg
-    mov bl, cl ; read cl sectors
-    mul bx ; ax = ax * bx
-    mov ecx, eax ; ecx is counter for insw
-    mov edx, 0x1F0 ; data port in and out
+    ; We need to read 256 words at a time
+    mov ecx, 256 ; going to read 256 words = 512 bits
+    mov dx, 0x1F0 ; data port in and out
     rep insw ; rep instruction will do insw till ecx is not zero 
     ;insw = Input word from I/O port specified in DX into memory location specified in ES:(E)DI
+    pop ecx ; retrieve the backed up no of sectors
+    loop .next_sector ; loop instruction will decrement ecx value and jmp label if ecx !=0
 .done_reading_sectors:
     ;ending reading sectors into memory
     ret

@@ -1,11 +1,10 @@
 #Absoulte Paths
-export SRC_DIRECTOTY=${PWD}/src
+export SRC_DIRECTORY=${PWD}/src
 export BIN_DIRECTORY=${PWD}/bin
 export BUILD_DIRECTORY=${PWD}/build
 
 #Directories to Build
-DIRECTORIES = $(SRC_DIRECTOTY)/boot \
-				$(SRC_DIRECTOTY)
+DIRECTORIES = $(SRC_DIRECTORY)
 
 #MACROS
 OS_BIN = os.bin 
@@ -21,7 +20,7 @@ $(DIRECTORIES):
 make_os: clean_os
 	dd if=$(BIN_DIRECTORY)/boot.bin >> $(BIN_DIRECTORY)/$(OS_BIN)
 	dd if=$(BIN_DIRECTORY)/kernel.bin >> $(BIN_DIRECTORY)/$(OS_BIN)
-	dd if=/dev/zero bs=512 count=100 >> $(BIN_DIRECTORY)/$(OS_BIN)
+	dd if=/dev/zero bs=512 count=10 >> $(BIN_DIRECTORY)/$(OS_BIN)
 
 clean_os:
 	rm -rf $(BIN_DIRECTORY)/$(OS_BIN)
