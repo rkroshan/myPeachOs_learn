@@ -1,11 +1,10 @@
 #Absoulte Paths
-export SRC_DIRECTOTY=${PWD}/src
+export SRC_DIRECTORY=${PWD}/src
 export BIN_DIRECTORY=${PWD}/bin
 export BUILD_DIRECTORY=${PWD}/build
 
 #Directories to Build
-DIRECTORIES = $(SRC_DIRECTOTY)/boot \
-				$(SRC_DIRECTOTY)
+DIRECTORIES = $(SRC_DIRECTORY)
 
 #MACROS
 OS_BIN = os.bin 
