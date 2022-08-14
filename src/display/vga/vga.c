@@ -1,17 +1,5 @@
-#include "kernel.h"
-
-/*
-returns length of the string
-*/
-size_t strlen(char* str)
-{
-    int count=0;
-    while(*str != '\0'){
-        count++;
-        str++;
-    }
-    return count;
-}
+#include "vga.h"
+#include "utils/strings/strings.h"
 
 //static variables for the VGA monitor
 static uint16_t* const video_mem = (uint16_t*)VGA_MEM_ADDR_START;
@@ -94,15 +82,4 @@ Terminal Initialization function, calls during kernel init
 */
 void terminal_initialize(){
     terminal_clear(); //clear the terminal
-}
-
-
-void kernel_init(){
-    terminal_initialize();
-}
-
-void kernel_main()
-{
-    kernel_init();
-    terminal_print("This is roshanOs........\nInitializing Please wait\nchecking..\n");
 }

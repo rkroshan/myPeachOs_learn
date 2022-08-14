@@ -1,5 +1,5 @@
-#ifndef __KERNEL_H__
-#define __KERNEL_H__
+#ifndef __VGA_H__
+#define __VGA_H__
 
 //include
 #include <stddef.h>
@@ -32,7 +32,6 @@ VGA_TOTAL_COLORS
 }VGA_COLOR;
 
 //Function Prototypes
-size_t strlen(char* str);
 /*
 Set Foreground color of VGA Monitor
 */
@@ -57,7 +56,5 @@ void terminal_clear();
 Terminal Initialization function, calls during kernel init
 */
 void terminal_initialize();
-
-void kernel_main();
 
 #endif
