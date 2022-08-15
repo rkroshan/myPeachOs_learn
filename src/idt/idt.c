@@ -2,6 +2,7 @@
 #include "config.h"
 #include "memory/memory.h"
 #include "display/vga/vga.h"
+#include "io/io.h"
 
 /*creating total no of descriptors*/
 struct idt_desc descriptors[TOTAL_INTERRUPT_DESCRIPTORS];
@@ -9,6 +10,25 @@ struct idtr idtr_descriptor;
 
 /*asm function to load idtr struct addr to idtr reg, defined in idt.asm*/
 extern void idt_load(struct idtr* ptr);
+/*asm function to initialize PIC*/
+extern void pic_init(void);
+/*asm function handler for 0x21 interrupt*/
+extern void int21h(void);
+/*asm function handler for default interrupt handler*/
+extern void no_interrupt(void);
+/*asm function to enable interrupts*/
+extern void enable_interrupts(void);
+/*asm function to disable interrupts*/
+extern void disable_interrupts(void);
+
+void no_interrupt_handler(){
+    outb(0x20, 0x20); //acknowledge the interrupt to PIC
+}
+
+void int21h_handler(){
+    terminal_print("Keyboard Pressed\n");
+    outb(0x20, 0x20); //acknowledge the interrupt to PIC
+}
 
 void idt_zero(){
     terminal_print("Error : Divide by zero\n");
@@ -32,10 +52,21 @@ void idt_init(){
     idtr_descriptor.base = (uint32_t)descriptors;
     idtr_descriptor.limit = sizeof(descriptors) - 1;
 
-    /*setting interrupt*/
+    /*setting default interrupts*/
+    for(int i=0; i<TOTAL_INTERRUPT_DESCRIPTORS; i++){
+        idt_set(i, no_interrupt);
+    }
+    /*setting specific interrupt*/
     /*int 0*/
     idt_set(0,idt_zero);
+    idt_set(0x21,int21h);
 
     /*load interrupt descriptor table*/
     idt_load(&idtr_descriptor);
+
+    /*Initialize the PIC*/
+    pic_init();
+
+    /*enable interrupts*/
+    enable_interrupts();
 }
