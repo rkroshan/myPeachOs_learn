@@ -1,14 +1,19 @@
 section .asm
 
+;global initializations
 global enable_interrupts
 global disable_interrupts
 global idt_load ; so that we can refernce it globally in kernel
 global pic_init
 global int21h
 global no_interrupt
+global raise_int_zero
 
+; extern function calls
 extern int21h_handler
 extern no_interrupt_handler
+extern idt_zero
+
 
 enable_interrupts: ; function to enable interrupts
     sti ; sti inst : enable the interrupts
@@ -57,3 +62,11 @@ int21h: ; handler to be assigend to interrupt 0x21 handler = keyboard interrupt
     popad ; popad inst
     sti ; enable the interrupts
     iret ; return from subroutine
+
+raise_int_zero: ; int 0 is divide be zero error, using it just for checking
+    cli ; clear/disable the interrupts
+    pushad ; pushad inst : Push EAX, ECX, EDX, EBX, original ESP, EBP, ESI, and EDI
+    call idt_zero ; call idt_zero subroutine
+    popad ; popad inst
+    sti ; enable the interrupts
+    ret ; return from subroutine
