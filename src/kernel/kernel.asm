@@ -1,6 +1,6 @@
 [BITS 32]
 
-section .kernel.asm ; seperating kernel asm section, commented as were not able to get debugging symbol _start
+; section .kernel.asm ; seperating kernel asm section, commented as were not able to get debugging symbol _start
 
 global _start
 global raise_int_zero

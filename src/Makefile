@@ -21,11 +21,13 @@ $(SUBDIR):
 
 build: $(SUBDIR)
 	echo "kernel building"
-	i686-elf-ld -g -relocatable $(BUILD_DIRECTORY)/*.o -o $(BUILD_DIRECTORY)/$(COMPLETE_KERNEL_OBJ)
+#necessary to place kernel.asm.o first in the relocatable object file palcement so that 0x100000 should be _start
+	i686-elf-ld -g -relocatable $(BUILD_DIRECTORY)/kernel_asm/kernel.asm.o $(BUILD_DIRECTORY)/*.o -o $(BUILD_DIRECTORY)/$(COMPLETE_KERNEL_OBJ)
 	i686-elf-gcc $(FLAGS) -T $(SRC_DIRECTORY)/linker.ld -o $(BIN_DIRECTORY)/$(COMPLETE_KERNEL_BIN) -ffreestanding -nostdlib $(BUILD_DIRECTORY)/kernelfull.o
 
 clean:
 	rm -rf $(BUILD_DIRECTORY)/*.o
+	rm -rf $(BUILD_DIRECTORY)/kernel_asm/
 	rm -rf $(BIN_DIRECTORY)/*.bin
 
 #disassemble the bootloader binary
