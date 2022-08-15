@@ -3,10 +3,7 @@ OUTPUT_FORMAT(binary)
 SECTIONS
 {
     . = 1M;
-    .kernel.asm : ALIGN(4096)
-    {
-        *(.kernel.asm)
-    }
+    
     .text : ALIGN(4096)
     {
         *(.text)
