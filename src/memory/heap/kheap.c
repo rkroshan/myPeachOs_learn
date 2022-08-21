@@ -2,6 +2,7 @@
 #include "heap.h"
 #include "config.h"
 #include "display/vga/vga.h"
+#include "memory/memory.h"
 
 /*kernel heap structures*/
 struct heap kernel_heap;
@@ -31,6 +32,19 @@ void kheap_init(){
 void* kmalloc(size_t size)
 {
     return heap_malloc(&kernel_heap,size);
+}
+
+/*kzalloc: heap memory allocation method and clear the memory*/
+void* kzalloc(size_t size)
+{
+    void* ptr = kmalloc(size);
+    /*check if memory got allocated*/
+    if(ptr==NULL){
+        return NULL;
+    }
+    /*clear the memory*/
+    memset(ptr,0x00,size);
+    return ptr;
 }
 
 /*free : heap memory free method*/

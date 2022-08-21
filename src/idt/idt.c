@@ -16,10 +16,6 @@ extern void pic_init(void);
 extern void int21h(void);
 /*asm function handler for default interrupt handler*/
 extern void no_interrupt(void);
-/*asm function to enable interrupts*/
-extern void enable_interrupts(void);
-/*asm function to disable interrupts*/
-extern void disable_interrupts(void);
 
 void no_interrupt_handler(){
     outb(0x20, 0x20); //acknowledge the interrupt to PIC
@@ -67,6 +63,4 @@ void idt_init(){
     /*Initialize the PIC*/
     pic_init();
 
-    /*enable interrupts*/
-    enable_interrupts();
 }

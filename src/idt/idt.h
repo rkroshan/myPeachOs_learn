@@ -25,4 +25,9 @@ struct idtr{
 //Function Prototype
 /*Initialize IDT*/
 void idt_init();
+/*enable interrupts*/
+void enable_interrupts();
+/*disable interrupts*/
+void disable_interrupts();
+
 #endif

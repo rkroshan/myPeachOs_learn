@@ -7,6 +7,8 @@
 void kheap_init();
 /*kmalloc: heap memory allocation method*/
 void* kmalloc(size_t size);
+/*kzalloc: heap memory allocation method and clear the memory*/
+void* kzalloc(size_t size);
 /*free : heap memory free method*/
 void kfree(void* ptr);
 
