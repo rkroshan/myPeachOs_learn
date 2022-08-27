@@ -1,5 +1,11 @@
 #include "disk.h"
-#include <io/io.h>
+#include "io/io.h"
+#include "config.h"
+#include "status.h"
+#include "memory/memory.h"
+
+/*actual disk currently accessing*/
+struct disk disk;
 
 /*read total_bytes count from given lba and place it in buf*/
 uint8_t disk_read_sector(uint32_t lba, uint16_t total_sectors, void* buf)
@@ -31,4 +37,32 @@ uint8_t disk_read_sector(uint32_t lba, uint16_t total_sectors, void* buf)
    }
 
     return 0;
+}
+
+/*search and initialize the disk*/
+void disk_search_and_init()
+{
+    memset(&disk, 0, sizeof(disk));
+    disk.type = DISK_TYPE_REAL;
+    disk.sector_size = DISK_SECTOR_SIZE;
+}
+
+/*return the disk structure*/
+struct disk* disk_get(int index)
+{
+    if (index != 0)
+        return 0;
+
+    return &disk;
+}
+
+/*API to read from the disk*/
+int disk_read_block(struct disk* idisk, unsigned int lba, int total_sectors, void* buf)
+{
+    if (idisk != &disk)
+    {
+        return -EIO;
+    }
+
+    return disk_read_sector(lba, total_sectors, buf);
 }

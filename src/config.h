@@ -19,4 +19,7 @@
 /*heap table storage address*/
 #define HEAP_TABLE_ADDRESS  0x00007E00
 
+/*Disk sector size*/
+#define DISK_SECTOR_SIZE 512
+
 #endif

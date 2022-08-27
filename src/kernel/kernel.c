@@ -18,6 +18,9 @@ static void kernel_init(){
     /*Initialize the heap*/
     kheap_init();
 
+    /* Search and initialize the disks */
+    disk_search_and_init();
+
     /*initialize the interrupt descriptor table*/
     idt_init();
 
@@ -47,7 +50,8 @@ static void kernel_init(){
 
     /*example to read disk sectors*/
     char buf[512];
-    disk_read_sector(0, 1, buf);
+    struct disk* idisk = disk_get(0);
+    disk_read_block(idisk, 0, 1, buf);
 
     /*enable interrupts*/
     enable_interrupts();

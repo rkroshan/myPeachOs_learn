@@ -8,4 +8,6 @@
 #define EINVARG     1
 //NO MEMORY AVAILABLE
 #define ENOMEM      2
+//Input Output Error
+#define EIO         3
 #endif
