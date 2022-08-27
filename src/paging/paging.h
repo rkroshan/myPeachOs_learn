@@ -1,6 +1,8 @@
 #ifndef __PAGING_H__
 #define __PAGING_H__
 
+#include <stdbool.h>
+
 /*
 https://wiki.osdev.org/Paging
 */
@@ -43,6 +45,11 @@ struct paging_4gb* create_paging_4gb(uint8_t flags);
 void paging_switch(uint32_t* pgd);
 /*enable the paging*/
 void enable_paging(void);
+
+/*set the virtual points to the physical addr provided as val*/
+int paging_set(uint32_t* directory, void* virt, uint32_t val);
+/*check if addr given is page alinged*/
+bool paging_is_aligned(void* addr);
 
 /*get the pgd from paging_4gb struct*/
 uint32_t* paging_4gb_get_pgd(struct paging_4gb* paging_struct);
