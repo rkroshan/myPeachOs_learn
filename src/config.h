@@ -22,4 +22,7 @@
 /*Disk sector size*/
 #define DISK_SECTOR_SIZE 512
 
+/*File System Max Path string length*/
+#define FS_MAX_PATH_LEN     256
+
 #endif

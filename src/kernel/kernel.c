@@ -6,6 +6,7 @@
 #include "paging/paging.h"
 #include "disk/disk.h"
 #include "disk/diskstreamer.h"
+#include "fs/pparser.h"
 
 extern void raise_int_zero(void);
 
@@ -51,13 +52,18 @@ static void kernel_init(){
 
     /*enable interrupts*/
     enable_interrupts();
-
+#ifdef SHOW_EXAMPLE_DISKSTREAMER
     /*example to read disk sectors from 2 to 516 bytes*/
     struct diskstreamer* stream = new_diskstreamer(0);
     diskstreamer_seek(stream,0x02);
     char buf[600];
     diskstreamer_read(stream,(void*)buf,516);
     while(1){}
+#endif
+    struct path_root* root_path = pathparser_parse("0:/bin/shell.exe", NULL);
+    if(root_path){
+        
+    }
 }
 
 void kernel_main()

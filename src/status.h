@@ -10,4 +10,6 @@
 #define ENOMEM      2
 //Input Output Error
 #define EIO         3
+//Bad Path String
+#define EBADPATH    4
 #endif
