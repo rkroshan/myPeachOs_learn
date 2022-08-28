@@ -19,7 +19,7 @@ struct disk
 
 //Function Prototypes
 /*read total_sectors count from given lba and place it in buf*/
-uint8_t disk_read_sector(uint32_t lba, uint16_t total_sectors, void* buf);
+int disk_read_sector(uint32_t lba, uint16_t total_sectors, void* buf);
 /*search and initialize the disk*/
 void disk_search_and_init();
 /*return the disk structure*/

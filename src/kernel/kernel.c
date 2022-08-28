@@ -5,6 +5,7 @@
 #include "memory/heap/kheap.h"
 #include "paging/paging.h"
 #include "disk/disk.h"
+#include "disk/diskstreamer.h"
 
 extern void raise_int_zero(void);
 
@@ -48,13 +49,15 @@ static void kernel_init(){
     terminal_print(old_ptr);
 #endif
 
-    /*example to read disk sectors*/
-    char buf[512];
-    struct disk* idisk = disk_get(0);
-    disk_read_block(idisk, 0, 1, buf);
-
     /*enable interrupts*/
     enable_interrupts();
+
+    /*example to read disk sectors from 2 to 516 bytes*/
+    struct diskstreamer* stream = new_diskstreamer(0);
+    diskstreamer_seek(stream,0x02);
+    char buf[600];
+    diskstreamer_read(stream,(void*)buf,516);
+    while(1){}
 }
 
 void kernel_main()

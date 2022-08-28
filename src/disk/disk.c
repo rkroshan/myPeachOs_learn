@@ -8,7 +8,7 @@
 struct disk disk;
 
 /*read total_bytes count from given lba and place it in buf*/
-uint8_t disk_read_sector(uint32_t lba, uint16_t total_sectors, void* buf)
+int disk_read_sector(uint32_t lba, uint16_t total_sectors, void* buf)
 {
     /*read disk configuration*/
     outb(0x1F6,(lba >> 24) | 0xE0 ) ;                    // Port to send drive and bit 24 - 27 of LBA and select master drive
