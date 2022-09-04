@@ -20,7 +20,11 @@ $(DIRECTORIES):
 make_os: clean_os
 	dd if=$(BIN_DIRECTORY)/boot.bin >> $(BIN_DIRECTORY)/$(OS_BIN)
 	dd if=$(BIN_DIRECTORY)/kernel.bin >> $(BIN_DIRECTORY)/$(OS_BIN)
-	dd if=/dev/zero bs=512 count=100 >> $(BIN_DIRECTORY)/$(OS_BIN)
+	dd if=/dev/zero bs=1048576 count=16 >> $(BIN_DIRECTORY)/$(OS_BIN)
+	sudo mount -t vfat ./bin/os.bin /mnt
+# Copy a file over
+	sudo cp ${SRC_DIRECTORY}/hello.txt /mnt
+	sudo umount /mnt
 
 clean_os:
 	rm -rf $(BIN_DIRECTORY)/$(OS_BIN)

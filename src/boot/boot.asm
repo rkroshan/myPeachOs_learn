@@ -7,11 +7,39 @@ CODE_SEG equ gdt_code - gdt_start ; Code SD start addr
 DATA_SEG equ gdt_data - gdt_start ; Data SD start addr
 
 ;considering Bios parameter block information structure needs to be here for BIOS to put some information
-_start: ; https://wiki.osdev.org/FAT
-    jmp short start
-    nop
+; http://www.ntfs.com/fat-partition-sector.htm
+; https://wiki.osdev.org/FAT
+;BIOS Parameter Block (BPB)
+jmp short start
+nop
+; The reason for this is to jump over the disk format information (the BPB and EBPB). 
+;Since the first sector of the disk is loaded into ram at location 0x0000:0x7c00 and executed, 
+;without this jump, the processor would attempt to execute data that isn't code
 
-times 33 db 0 ; size of BIOS Param block except the jmp short instruction, this will be use by some Bios to fill some information 
+; FAT16 Header
+OEMIdentifier           db 'PEACHOS '   ;OEM identifier,  If the string is less than 8 bytes, it is padded with spaces.
+BytesPerSector          dw 0x200        ;The number of Bytes per sector
+SectorsPerCluster       db 0x80         ;Number of sectors per cluster.
+ReservedSectors         dw 200          ;Number of reserved sectors. The boot record sectors are included in this value.
+FATCopies               db 0x02         ;Number of File Allocation Tables (FAT's) on the storage media.
+RootDirEntries          dw 0x40         ;The total number of file name entries that can be stored in the root folder of the volume.
+NumSectors              dw 0x00         ;The total sectors in the logical volume. If this value is 0, it means there are more than 65535 sectors in the volume, and the actual count is stored in the Large Sector Count entry at 0x20
+MediaType               db 0xF8         ;represent media type as hard disk
+SectorsPerFat           dw 0x100        ;Number of sectors per FAT
+SectorsPerTrack         dw 0x20         ;Number of sectors per track
+NumberOfHeads           dw 0x40         ;Number of heads or sides on the storage media
+HiddenSectors           dd 0x00         ;Number of hidden sectors.
+SectorsBig              dd 0x773594     ;Large sector count. This field is set if there are more than 65535 sectors in the volume, resulting in a value which does not fit in the Number of Sectors entry at 0x13.
+
+; Extended BPB (Dos 4.0)
+DriveNumber             db 0x80         ;0x80 for hard disks
+WinNTBit                db 0x00         ;Flags in Windows NT. Reserved otherwise.
+Signature               db 0x29         ;Fat16 Signature
+VolumeID                dd 0xD105       ;VolumeID 'Serial' number. Used for tracking volumes between computers. You can ignore this if you want
+VolumeIDString          db 'PEACHOS BOO';Volume label string. This field is padded with spaces
+SystemIDString          db 'FAT16   '   ;System identifier string. This field is a string representation of the FAT file system type.
+
+; times 33 db 0 ; size of BIOS Param block except the jmp short instruction, this will be use by some Bios to fill some information 
 
 ;actual start of code
 start:
