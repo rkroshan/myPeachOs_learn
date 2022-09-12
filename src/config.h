@@ -25,4 +25,9 @@
 /*File System Max Path string length*/
 #define FS_MAX_PATH_LEN     256
 
+/*Max Num of File Systems*/
+#define PEACHOS_MAX_FILESYSTEMS 12
+/*Max Num of file Descriptors*/
+#define PEACHOS_MAX_FILE_DESCRIPTORS 512
+
 #endif

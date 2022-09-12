@@ -43,6 +43,23 @@ int char_to_digit(char c)
 }
 
 /*
+copy string from dest to source
+Note: it is not full proof no checking similar to memmove
+*/
+char* strcpy(char* dst, const char* src)
+{
+    char* res = dst;
+    while(*src != '\0')
+    {
+        *dst = *src;
+        src +=1;
+        dst +=1;
+    }
+    *dst = 0;
+    return res;
+}
+
+/*
 Return whether both strings given are equal
 */
 int memcmp(void* str1, void* str2, int len)

@@ -22,6 +22,11 @@ Return ascii to digit val of the given char
 */
 int char_to_digit(char c);
 /*
+copy string from dest to source
+Note: it is not full proof no checking similar to memmove
+*/
+char* strcpy(char* dst, const char* src);
+/*
 Return whether both strings given are equal
 */
 int memcmp(void* str1, void* str2, int len);

@@ -4,6 +4,7 @@
 //includes
 #include <stdint.h>
 #include <stddef.h>
+#include "fs/file.h"
 
 typedef unsigned int DISK_TYPE;
 
@@ -15,6 +16,10 @@ struct disk
 {
     DISK_TYPE type;
     int sector_size;
+    int id; // The id of the disk
+    struct filesystem* filesystem;
+    // The private data of our filesystem
+    void* fs_private;
 };
 
 //Function Prototypes

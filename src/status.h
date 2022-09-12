@@ -12,4 +12,8 @@
 #define EIO         3
 //Bad Path String
 #define EBADPATH    4
+//Not Implemented yet
+#define ENIY        5
+//Not Fat16 Filesystem
+#define EFSNOTFAT16 6
 #endif

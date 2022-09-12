@@ -20,6 +20,9 @@ static void kernel_init(){
     /*Initialize the heap*/
     kheap_init();
 
+    // Initialize filesystems
+    fs_init();
+
     /* Search and initialize the disks */
     disk_search_and_init();
 
@@ -60,10 +63,12 @@ static void kernel_init(){
     diskstreamer_read(stream,(void*)buf,516);
     while(1){}
 #endif
+#ifdef SHOW_PATH_PARSER_EXAMPLE    
     struct path_root* root_path = pathparser_parse("0:/bin/shell.exe", NULL);
     if(root_path){
         
     }
+#endif
 }
 
 void kernel_main()
@@ -73,6 +78,7 @@ void kernel_main()
     // raise_int_zero();
     // outb(0x60, 0xff); //checking if outb works writing 0xff to 0x60 port
     // terminal_print("Able to write after interrupt raise\n");
+#ifdef SHOW_KMALLOC_EXAMPLE
     void *ptr1, *ptr2, *ptr3;
     ptr1 = kmalloc(200);
     ptr2 = kmalloc(8196);
@@ -81,4 +87,6 @@ void kernel_main()
     if(ptr1 || ptr2 || ptr3){
         
     }
+#endif
+    while(1){}
 }
