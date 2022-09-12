@@ -28,7 +28,7 @@ int diskstreamer_read(struct diskstreamer* stream, void* out, int total_bytes)
     example current pos: 42, total_bytes= 2006
     current_sector = 42/512 = 0 == lba
     final offset = 42+2006 = 2048 
-    sector_to_read = (final_offset - 1)/ 512 == 3
+    sector_upto_read = (final_offset - 1)/ 512 == 3
     total_sectors_to_read = sectors_to_read - current_sector +1 = 3-0+1 = 4
     */
     int current_sector = stream->pos / DISK_SECTOR_SIZE ;   // this will give current sector number (using as lba)
@@ -44,9 +44,13 @@ int diskstreamer_read(struct diskstreamer* stream, void* out, int total_bytes)
     }
 
     //fill the out buffer to the required bytes
+    int pos_offset_in_sector = current_pos % DISK_SECTOR_SIZE;
     for(int i=0 ;i<total_bytes; i++){
-        *(char*)out++ = buf[current_pos + i];
+        *(char*)out++ = buf[pos_offset_in_sector + i];
     }
+
+    //change the streamer seek position
+    diskstreamer_seek(stream, final_pos);
 
 out:
     //free the buffer memory from heap
