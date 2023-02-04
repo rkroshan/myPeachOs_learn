@@ -40,4 +40,6 @@ disassemble_bin:
 #setup requirements
 setup:
 	./setup.sh
-
+#run gdb
+gdb:
+	gdb -x gdbx

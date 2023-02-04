@@ -15,3 +15,10 @@ option 2:
  - (Binutils) wget https://ftp.gnu.org/gnu/binutils/binutils-2.35.tar.xz
  - (GCC) wget https://ftp.lip6.fr/pub/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz
  - Follow the build section on the GCC_cross-Compile page
+
+Debugging points
+
+gdb
+ - sudo apt install gdb
+ - make gdb
+ - refer to top level make file for more information
