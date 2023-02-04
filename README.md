@@ -3,7 +3,8 @@
 install qemu and nasm compiler for bootloader
  - sudo apt install nasm qem-system-x86
 
-install cross-compiler (steps verified on Ubuntu 18)
+install cross-compiler (steps verified on Ubuntu 18 and 20.04)
+
 option 1: 
  - make setup and then add the toolchain/bin path to $PATH in bashrc
 

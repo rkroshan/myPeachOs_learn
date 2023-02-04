@@ -4,7 +4,7 @@ CURRENT=$PWD
 TOOLCHAIN_DIR=$CURRENT/toolchain
 SRC=$TOOLCHAIN_DIR/src
 BUILD=$TOOLCHAIN_DIR/build
-#preparation exports
+# preparation exports
 mkdir -p $SRC
 mkdir -p $BUILD
 export PREFIX=$BUILD
@@ -17,6 +17,8 @@ sudo apt install -y build-essential bison flex libgmp3-dev libmpc-dev libmpfr-de
 cd $TOOLCHAIN_DIR
 aria2c -x10 -c https://ftp.gnu.org/gnu/binutils/binutils-2.35.tar.xz
 aria2c -x10 -c https://ftp.lip6.fr/pub/gcc/releases/gcc-10.2.0/gcc-10.2.0.tar.gz
+tar -xf binutils-2.35.tar.xz
+tar -xf gcc-10.2.0.tar.gz
 #install bin utils
 mkdir -p build-binutils
 cd build-binutils
@@ -33,5 +35,5 @@ make all-target-libgcc
 make install-gcc
 make install-target-libgcc
 cd $CURRENT
-echo "ADD $PREFIX/bin to $PATH in bashrc or make sure path is configured properly"
+echo "ADD $PREFIX/bin to PATH in bashrc or make sure path is configured properly"
 	
