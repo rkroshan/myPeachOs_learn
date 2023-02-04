@@ -1,6 +1,13 @@
 # myPeachOs_learn
 
+install qemu and nasm compiler for bootloader
+ - sudo apt install nasm qem-system-x86
+
 install cross-compiler (steps verified on Ubuntu 18)
+option 1: 
+ - make setup and then add the toolchain/bin path to $PATH in bashrc
+
+option 2:
  - https://wiki.osdev.org/GCC_Cross-Compiler
  - sudo apt install build-essential bison flex libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev
  - Download the source code 

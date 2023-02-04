@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #preparation exports
-export PREFIX="$HOME/opt/cross"
+export PREFIX="$TOOLCHAIN_DIR/build"
 export TARGET=i686-elf
 export PATH="$PREFIX/bin:$PATH"
 

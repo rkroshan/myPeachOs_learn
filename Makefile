@@ -36,3 +36,8 @@ open: dis
 dis: disassemble_bin
 disassemble_bin:
 	# ndisasm $(BIN_DIRECTORY)/os.bin > $(BIN_DIRECTORY)/disassemble_os.txt
+
+#setup requirements
+setup:
+	./setup.sh
+
